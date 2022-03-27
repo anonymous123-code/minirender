@@ -33,7 +33,7 @@ class Camera:
 
     def convert_to_camera_space(self, position_vectors):
         return rotation_matrix(-self.rotation_vector[0], -self.rotation_vector[1], -self.rotation_vector[2]) * (
-                    position_vectors - self.position
+                position_vectors - self.position
         )
 
 
@@ -76,7 +76,25 @@ if __name__ == "__main__":
     v = posVects.reshape(-1, 3).T
 
     group = VertexGroup(np.array([[1], [1], [1]]), np.array([0, 0, 0]), v)
+    camera = Camera(np.array([[-1], [0], [0]]), np.array([0, 0, 0]))
     print(group.position_relative_to_world)
+    print(camera.convert_to_camera_space(group.position_relative_to_world))
+
+
+    def generate_frame():
+        camera.position += np.array([[0.1], [0], [0]])
+        group.rotation_vector += np.array([[0], [0], [0.1]])
+
+        camera_space_coords = camera.convert_to_camera_space(group.position_relative_to_world)
+        camera_space_coords[0] /= camera_space_coords[2]
+        camera_space_coords[1] /= camera_space_coords[2]
+
+        scaled_projected = (np.array(
+            [1, 0, 0],
+            [0, 1, 0]
+        ) * camera_space_coords / 10)
+
+        return scaled_projected[:, np.any(scaled_projected > 10, axis=0)]
 
     # def transform(t):
     #     return np.matrix([
