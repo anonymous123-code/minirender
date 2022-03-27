@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def rotMatrix(roll, nick, yaw):
+def rotation_matrix(roll, nick, yaw):
     return np.matrix(
         [
             [np.cos(roll) * np.cos(nick), np.sin(yaw) * np.sin(nick) * np.cos(roll) - np.sin(yaw) * np.cos(roll),
@@ -15,23 +15,26 @@ def rotMatrix(roll, nick, yaw):
 
 
 class VertexGroup:
-    def __init__(self, pos, rotVec, posVects):
-        self.pos = pos
-        self.rotVec = rotVec
-        self.posVects = posVects
+    def __init__(self, position, rotation_vector, position_vectors):
+        self.position = position
+        self.rotation_vector = rotation_vector
+        self.position_vectors = position_vectors
 
     @property
     def position_relative_to_world(self):
-        return rotMatrix(self.rotVec[0], self.rotVec[1], self.rotVec[2]) * self.posVects + self.pos
+        return rotation_matrix(self.rotation_vector[0], self.rotation_vector[1],
+                               self.rotation_vector[2]) * self.position_vectors + self.position
 
 
 class Camera:
-    def __init__(self, pos, rotVec):
-        self.pos = pos
-        self.rotVec = rotVec
+    def __init__(self, position, rotation_vector):
+        self.position = position
+        self.rotation_vector = rotation_vector
 
-    def convertToCameraSpace(self, posVects):
-        return rotMatrix(-self.rotVec[0], -self.rotVec[1], -self.rotVec[2]) * (posVects - self.pos)
+    def convert_to_camera_space(self, position_vectors):
+        return rotation_matrix(-self.rotation_vector[0], -self.rotation_vector[1], -self.rotation_vector[2]) * (
+                    position_vectors - self.position
+        )
 
 
 if __name__ == "__main__":
@@ -75,7 +78,6 @@ if __name__ == "__main__":
     group = VertexGroup(np.array([[1], [1], [1]]), np.array([0, 0, 0]), v)
     print(group.position_relative_to_world)
 
-
     # def transform(t):
     #     return np.matrix([
     #         [np.cos(t), 0, -np.sin(t)],
@@ -90,7 +92,6 @@ if __name__ == "__main__":
     # plt.ion()
     # plt.figure(0)
     # x = 0
-
 
     # def animate(i):
     #     x.append(np.random.rand(1) * 10)
