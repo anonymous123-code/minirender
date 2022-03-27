@@ -20,8 +20,18 @@ class VertexGroup:
         self.rotVec = rotVec
         self.posVects = posVects
 
-    def getPosRelativeToWorld(self):
+    @property
+    def position_relative_to_world(self):
         return rotMatrix(self.rotVec[0], self.rotVec[1], self.rotVec[2]) * self.posVects + self.pos
+
+
+class Camera:
+    def __init__(self, pos, rotVec):
+        self.pos = pos
+        self.rotVec = rotVec
+
+    def convertToCameraSpace(self, posVects):
+        return rotMatrix(-self.rotVec[0], -self.rotVec[1], -self.rotVec[2]) * (posVects - self.pos)
 
 
 if __name__ == "__main__":
@@ -62,8 +72,8 @@ if __name__ == "__main__":
     )
     v = posVects.reshape(-1, 3).T
 
-    group = VertexGroup(np.array([[1], [1], [1]]), np.array([np.pi*2, 0, 0]), v)
-    group.getPosRelativeToWorld()
+    group = VertexGroup(np.array([[1], [1], [1]]), np.array([0, 0, 0]), v)
+    print(group.position_relative_to_world)
 
 
     # def transform(t):
