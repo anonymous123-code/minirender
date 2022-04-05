@@ -79,21 +79,40 @@ if __name__ == "__main__":
     camera = Camera(np.array([[0.], [0.], [-5.]]), np.array([0., 0., 0.]))
 
 
+    def generate_frame() -> np.ndarray:
+        camera.position += np.array([[0.5], [0.], [0.]])
+        camera.rotation_vector += np.array([0.,-np.pi/128,0.])
+        group.rotation_vector += np.array([0., np.pi/32, 0.])
 
-    def generate_frame():
-        camera.position += np.array([[0.1], [0], [0]])
-        group.rotation_vector += np.array([[0], [0], [0.1]])
+        camera_space_coords = np.asarray(camera.convert_to_camera_space(group.position_relative_to_world))
 
-        camera_space_coords = camera.convert_to_camera_space(group.position_relative_to_world)
+        camera_space_coords = camera_space_coords[:, (camera_space_coords[2] > 0)]
+
         camera_space_coords[0] /= camera_space_coords[2]
         camera_space_coords[1] /= camera_space_coords[2]
 
-        scaled_projected = (np.array(
-            [1, 0, 0],
-            [0, 1, 0]
-        ) * camera_space_coords / 10)
+        scaled_projected = (np.matrix(
+            [
+                [1, 0, 0],
+                [0, 1, 0]
+            ]
+        ) * camera_space_coords)
 
-        return scaled_projected[:, np.any(scaled_projected > 10, axis=0)]
+        return scaled_projected[:, ~np.asarray(np.any(abs(scaled_projected) > 10, axis=0)).reshape(-1)]
+
+    def render_frames(count):
+        for i in range(count):
+            with Image.new("RGB", (200, 200)) as img:
+                draw_img = ImageDraw.Draw(img)
+                frame = generate_frame()
+                print("frame+", frame)
+                print(frame.shape)
+                print((frame.T + 1) * 100)
+                for point in np.asarray((frame.T + 1) * 100):
+                    print((point[0], point[1]))
+                    draw_img.point((point[0], point[1]))
+                img.save("frame" + str(i) + ".png")
+    render_frames(20)
 
     # def transform(t):
     #     return np.matrix([
