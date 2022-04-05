@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 def rotation_matrix(roll, nick, yaw):
     return np.matrix(
         [
-            [np.cos(roll) * np.cos(nick), np.sin(yaw) * np.sin(nick) * np.cos(roll) - np.sin(yaw) * np.cos(roll),
+            [np.cos(yaw) * np.cos(nick), np.sin(roll) * np.sin(nick) * np.cos(yaw) - np.sin(yaw) * np.cos(roll),
              np.sin(nick) * np.cos(roll) * np.cos(yaw) + np.sin(roll) * np.sin(yaw)],
-            [np.sin(roll) * np.cos(nick), np.sin(yaw) * np.sin(roll) * np.cos(nick) + np.cos(yaw) * np.cos(roll),
-             np.sin(yaw) * np.cos(roll) * np.cos(nick) - np.sin(roll) * np.cos(yaw)],
+            [np.sin(yaw) * np.cos(nick), np.sin(yaw) * np.sin(roll) * np.sin(nick) + np.cos(yaw) * np.cos(roll),
+             np.sin(yaw) * np.cos(roll) * np.sin(nick) - np.sin(roll) * np.cos(yaw)],
             [-np.sin(nick), np.sin(roll) * np.cos(nick), np.cos(nick) * np.cos(roll)]
         ]
     )
