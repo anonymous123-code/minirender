@@ -21,7 +21,7 @@ class VertexGroup:
         self.position_vectors = position_vectors
 
     @property
-    def position_relative_to_world(self):
+    def position_relative_to_world(self) -> np.ndarray:
         return rotation_matrix(self.rotation_vector[0], self.rotation_vector[1],
                                self.rotation_vector[2]) * self.position_vectors + self.position
 
