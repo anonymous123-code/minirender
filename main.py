@@ -75,10 +75,9 @@ if __name__ == "__main__":
     )
     v = posVects.reshape(-1, 3).T
 
-    group = VertexGroup(np.array([[1], [1], [1]]), np.array([0, 0, 0]), v)
-    camera = Camera(np.array([[-1], [0], [0]]), np.array([0, 0, 0]))
-    print(group.position_relative_to_world)
-    print(camera.convert_to_camera_space(group.position_relative_to_world))
+    group = VertexGroup(np.array([[0.], [0.], [0.]]), np.array([0., 0., 0.]), v)
+    camera = Camera(np.array([[0.], [0.], [-5.]]), np.array([0., 0., 0.]))
+
 
 
     def generate_frame():
