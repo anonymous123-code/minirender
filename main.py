@@ -4,6 +4,10 @@ from PIL import Image, ImageDraw
 
 
 def rotation_matrix(roll, nick, yaw):
+    #theta = nick
+    #psi = yaw
+    #phi = roll
+    #war falsch, auch matrixmultiplikation in doc
     return np.matrix(
         [
             [np.cos(yaw) * np.cos(nick), np.sin(roll) * np.sin(nick) * np.cos(yaw) - np.sin(yaw) * np.cos(roll),
